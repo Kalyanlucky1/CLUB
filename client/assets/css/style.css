@@ -1,0 +1,247 @@
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+}
+body, html {
+  width: 100%;
+  height: 100%;
+}
+
+/* Auth Container */
+.auth-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Full blurred background image */
+.auth-background {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: calc(100vw + 20px);
+  height: calc(100vh + 20px);
+  background-image: url('../assets/images/bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  z-index: -1;
+}
+
+
+
+/* Glassmorphism Login Form */
+.auth-card {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 10cm); /* Move form ~3cm to the right */
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  width: 350px;
+  padding-left: 40px;
+  padding-right: 40px;
+
+  padding-top: -300px;
+  padding-bottom: 40px;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(143, 44, 36, 0.18), 0 0 0 rgba(0, 0, 0, 0.07);
+  transition: transform 0.3 ease, box-shadow 0.3 ease;
+  z-index: 1;
+}
+.auth-card:hover {
+      transform: translate(-50%, -52%); /* move entire box up slightly */
+  box-shadow: 0 14px 42px 4px rgba(143, 44, 36, 0.19), 0 0 12px #b23b32;
+
+}
+
+
+/* Logo Image */
+.auth-header::before {
+  content: "";
+  display: block;
+  background: url('../assets/images/logo.png') no-repeat center;
+  background-size: 80px 80px;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 10px auto;
+}
+
+/* Header Text */
+.auth-header h1 {
+  font-size: 28px;
+  color: #8f2c24;
+  margin-bottom: 5px;
+}
+
+.auth-header p {
+  font-size: 16px;
+  color: #8f2c24;
+  margin-bottom: 20px;
+}
+
+/* Form Styling */
+.form-group label {
+  display: block;
+  text-align: left;
+  color: #8f2c24;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Password Field */
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-input .toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #8f2c24;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Remember/Forgot Options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #8f2c24;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.form-options a {
+  color: #8f2c24;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.form-group input:hover,
+.form-group input:focus {
+  box-shadow: 0 0 8px rgba(143, 44, 36, 0.5);
+  transition: box-shadow 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Button */
+.btn-primary {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #8f2c24;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #b23b32;
+  box-shadow: 0 0 15px #b23b32, 0 0 30px rgba(178, 59, 50, 0.3);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+
+/* Footer */
+.auth-footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #8f2c24;
+}
+
+.auth-footer a {
+  color: black;
+  text-decoration: underline;
+}
+.auth-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.background-image {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: calc(100vw + 20px);
+  height: calc(100vh + 20px);
+  object-fit: cover;
+  filter: blur(5px);
+  z-index: -1;
+}
+
+.logo-block {
+  position: absolute;
+  top: 100px;
+  left: 200px;
+  color: #fff;
+  z-index: 1;
+  text-align: left;
+}
+
+.tribes-logo {
+  /* width: 400px;
+  margin-bottom: -50px; */
+    max-width: 400px;
+  width: 100%;
+  animation: fadeInRight 1.2s ease forwards;
+  
+}
+
+.hero-image img {
+  max-width: 500px;
+  width: 100%;
+  animation: fadeInRight 1.2s ease forwards;
+}
+
+html, h4{
+    font-style: italic;
+    color: black;
+    
+
+}
+
+.head4 {
+   position: absolute;
+   top: 450px;
+   left: 250px;
+
+}

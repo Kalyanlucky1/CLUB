@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB - Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB</h1>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="active"><a href="home.html"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="../events/events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li><a href="../communities/communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li><a href="../chat/chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+        <li><a href="profile.html"><i class="fas fa-user"></i> Profile</a></li>
+        <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2>Dashboard</h2>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </div>
+          <div class="user-profile">
+            <img id="user-avatar" src="../assets/images/default-avatar.jpg" alt="User Avatar">
+            <span id="username">Username</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <!-- Profile Summary Card -->
+        <div class="profile-summary">
+          <div class="profile-header">
+            <img id="profile-pic" src="../assets/images/default-avatar.jpg" alt="Profile Picture">
+            <div class="profile-info">
+              <h3 id="full-name">John Doe</h3>
+              <p id="user-bio">Digital nomad and community builder</p>
+              <div class="location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="user-location">San Francisco, CA</span>
+              </div>
+            </div>
+          </div>
+          <div class="profile-stats">
+            <div class="stat-item">
+              <div class="stat-value" id="tribe-points">0</div>
+              <div class="stat-label">Tribe Points</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="events-attended">0</div>
+              <div class="stat-label">Events Attended</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="communities-joined">0</div>
+              <div class="stat-label">Communities</div>
+            </div>
+          </div>
+          <div class="level-indicator">
+            <span id="level-icon">☮️</span>
+            <span id="level-text">Peace Level</span>
+          </div>
+        </div>
+
+        <!-- Events Section -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Your Events</h3>
+            <a href="../events/events.html" class="view-all">View All</a>
+          </div>
+          <div class="events-container">
+            <div class="events-tabs">
+              <button class="tab-btn active" data-tab="created">Created Events</button>
+              <button class="tab-btn" data-tab="joined">Joined Events</button>
+            </div>
+            <div class="events-content">
+              <div class="tab-pane active" id="created-events">
+                <div class="empty-state">
+                  <i class="fas fa-calendar-plus"></i>
+                  <p>You haven't created any events yet</p>
+                  <a href="../events/create-event.html" class="btn btn-primary">Create Event</a>
+                </div>
+              </div>
+              <div class="tab-pane" id="joined-events">
+                <div class="empty-state">
+                  <i class="fas fa-calendar-check"></i>
+                  <p>You haven't joined any events yet</p>
+                  <a href="../events/events.html" class="btn btn-primary">Browse Events</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Communities Section -->
+        <div class="dashboard-section">
+          <div class="section-header">
+            <h3>Your Communities</h3>
+            <a href="../communities/communities.html" class="view-all">View All</a>
+          </div>
+          <div class="communities-grid">
+            <div class="community-card">
+              <img src="../assets/images/community-default.jpg" alt="Community Image">
+              <div class="community-info">
+                <h4>Digital Nomads</h4>
+                <p>For remote workers and travelers</p>
+                <div class="community-members">
+                  <i class="fas fa-users"></i>
+                  <span>245 members</span>
+                </div>
+              </div>
+            </div>
+            <div class="community-card">
+              <img src="../assets/images/community-default.jpg" alt="Community Image">
+              <div class="community-info">
+                <h4>Tech Enthusiasts</h4>
+                <p>Discussing the latest in tech</p>
+                <div class="community-members">
+                  <i class="fas fa-users"></i>
+                  <span>189 members</span>
+                </div>
+              </div>
+            </div>
+            <div class="add-community">
+              <a href="../communities/create-community.html">
+                <i class="fas fa-plus"></i>
+                <span>Create Community</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

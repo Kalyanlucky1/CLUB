@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB - Admin Dashboard</title>
+  <link rel="stylesheet" href="../client/assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB</h1>
+        <p>Admin Panel</p>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="active"><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li><a href="communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li><a href="logs.html"><i class="fas fa-clipboard-list"></i> Activity Logs</a></li>
+        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2>Admin Dashboard</h2>
+        </div>
+        <div class="header-right">
+          <div class="user-profile">
+            <img id="admin-avatar" src="../client/assets/images/default-avatar.jpg" alt="Admin Avatar">
+            <span>Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #4e73df;">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="total-users">0</h3>
+              <p>Total Users</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #1cc88a;">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="active-users">0</h3>
+              <p>Active Users</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #36b9cc;">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="total-events">0</h3>
+              <p>Total Events</p>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon" style="background-color: #f6c23e;">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <h3 id="total-communities">0</h3>
+              <p>Total Communities</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card">
+            <h3>User Sign-Ups</h3>
+            <div class="chart-container">
+              <canvas id="signups-chart"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-card">
+            <h3>Activity Types</h3>
+            <div class="chart-container">
+              <canvas id="activity-chart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-activities">
+          <h3>Recent Activities</h3>
+          <div class="activities-list" id="activities-list">
+            <div class="loading-spinner">
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Loading activities...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

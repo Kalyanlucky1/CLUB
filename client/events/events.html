@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB - Events</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/events.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB</h1>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="../dashboard/home.html"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="active"><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li><a href="../communities/communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li><a href="../chat/chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+        <li><a href="../dashboard/profile.html"><i class="fas fa-user"></i> Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2>Events</h2>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </div>
+          <div class="user-profile">
+            <img id="user-avatar" src="../assets/images/default-avatar.jpg" alt="User Avatar">
+            <span id="username">Username</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="events-content">
+        <div class="events-header">
+          <h3>Upcoming Events</h3>
+          <a href="create-event.html" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create Event
+          </a>
+        </div>
+
+        <div class="events-filters">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search events...">
+          </div>
+          <select class="filter-select">
+            <option value="all">All Events</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="past">Past</option>
+            <option value="joined">Joined</option>
+            <option value="created">Created</option>
+          </select>
+        </div>
+
+        <div class="events-grid" id="events-container">
+          <!-- Events will be loaded here by JavaScript -->
+          <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading events...</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/events.js"></script>
+</body>
+</html>

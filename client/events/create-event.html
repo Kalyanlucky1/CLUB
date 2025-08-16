@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB - Create Event</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/events.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB</h1>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="../dashboard/home.html"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li><a href="../communities/communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li><a href="../chat/chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+        <li><a href="../dashboard/profile.html"><i class="fas fa-user"></i> Profile</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2>Create Event</h2>
+        </div>
+        <div class="header-right">
+          <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+          </div>
+          <div class="user-profile">
+            <img id="user-avatar" src="../assets/images/default-avatar.jpg" alt="User Avatar">
+            <span id="username">Username</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="create-event-content">
+        <form id="create-event-form" enctype="multipart/form-data">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-title">Event Title</label>
+              <input type="text" id="event-title" name="title" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="event-date">Date</label>
+              <input type="date" id="event-date" name="date" required>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-time">Time</label>
+              <input type="time" id="event-time" name="time" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="event-location">Location</label>
+              <input type="text" id="event-location" name="location" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-description">Description</label>
+            <textarea id="event-description" name="description" rows="4" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-image">Event Image</label>
+            <div class="file-upload">
+              <label for="event-image" class="upload-btn">
+                <i class="fas fa-cloud-upload-alt"></i> Choose Image
+              </label>
+              <input type="file" id="event-image" name="image" accept="image/*">
+              <span class="file-name">No file chosen</span>
+            </div>
+            <div class="image-preview" id="image-preview">
+              <img id="preview-image" src="" alt="Preview" style="display: none;">
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" onclick="window.history.back()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Event</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/events.js"></script>
+</body>
+</html>

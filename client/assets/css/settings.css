@@ -1,0 +1,145 @@
+/* Settings Page Styles */
+.settings-content {
+  padding: 20px;
+}
+
+.settings-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.settings-section h3 {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  color: var(--dark-color);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #444;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+}
+
+.danger-zone {
+  border-left: 4px solid var(--danger-color);
+}
+
+.danger-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-outline {
+  background: none;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.btn-outline:hover {
+  background-color: #f8f9fa;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}

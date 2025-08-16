@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TribesHUB - Register</title>
+  <link rel="stylesheet" href="../assets/css/auth.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  />
+</head>
+<body>
+  <div class="auth-container">
+
+    <!-- Background image as HTML element -->
+    <img src="../assets/images/bg.jpg" alt="Background" class="auth-bg-img" />
+
+    <div class="auth-card">
+
+      <!-- Visible logo inside the card -->
+      <img src="../assets/images/logo.png" alt="TribesHUB Logo" class="auth-logo" />
+
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Find The Tribe, Join The Vibe.</p>
+      </div>
+
+      <form id="register-form" enctype="multipart/form-data">
+
+        <!-- Row: Full Name & Username -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+            <div class="validation-message" id="username-validation"></div>
+          </div>
+        </div>
+
+        <!-- Row: Email & Phone -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+            <div class="validation-message" id="email-validation"></div>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input">
+            <input type="password" id="password" name="password" required />
+            <button type="button" class="toggle-password">
+              <!-- <i class="fas fa-eye"></i> -->
+            </button>
+          </div>
+          <div class="password-strength">
+            <div class="strength-bar"></div>
+            <span class="strength-text">Weak</span>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required />
+          <div class="validation-message" id="password-validation"></div>
+        </div>
+
+        <!-- Profile Picture Upload -->
+        <div class="form-group">
+          <label for="profilePic">Profile Picture</label>
+          <div class="file-upload">
+            <label for="profilePic" class="upload-btn">
+              <i class="fas fa-cloud-upload-alt"></i> Choose Image
+            </label>
+            <input type="file" id="profilePic" name="profilePic" accept="image/*" />
+            <span class="file-name">No file chosen</span>
+          </div>
+        </div>
+
+        <!-- Interests -->
+        <div class="form-group">
+          <label for="interests">Interests (comma separated)</label>
+          <input
+            type="text"
+            id="interests"
+            name="interests"
+            placeholder="e.g., hiking, photography, technology"
+          />
+        </div>
+
+        <!-- Row: Country, State, City -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country" name="country" class="form-control" required>
+              <option value="">Select Country</option>
+              <!-- Populate countries dynamically via JS if needed -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="state">State/Region</label>
+            <select id="state" name="state" class="form-control" required>
+              <option value="">Select State</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" class="form-control" required />
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>
+          Already have an account?
+          <a href="login.html">Login</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/auth.js"></script>
+</body>
+</html>

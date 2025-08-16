@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB Admin - Activity Logs</title>
+  <link rel="stylesheet" href="../admin/assets/css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar Navigation -->
+    <nav class="admin-sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB <span>Admin</span></h1>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li><a href="communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li class="active"><a href="logs.html"><i class="fas fa-clipboard-list"></i> Activity Logs</a></li>
+        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <header class="admin-header">
+        <div class="header-left">
+          <!-- <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button> -->
+          <h2>Activity Logs</h2>
+        </div>
+        <div class="header-right">
+          <div class="admin-profile">
+            <img src="../assets/images/admin-avatar.jpg" alt="Admin Avatar">
+            <span>Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="admin-main-content">
+        <div class="card">
+          <div class="card-header">
+            <h3>System Activity Logs</h3>
+            <div class="card-actions">
+              <div class="filter-group">
+                <label for="log-type">Filter by type:</label>
+                <select id="log-type" class="form-control">
+                  <option value="">All Types</option>
+                  <option value="signup">Signups</option>
+                  <option value="login">Logins</option>
+                  <option value="event_created">Event Created</option>
+                  <option value="event_joined">Event Joined</option>
+                  <option value="community_created">Community Created</option>
+                  <option value="community_joined">Community Joined</option>
+                  <option value="message_sent">Messages Sent</option>
+                  <option value="points_updated">Points Updated</option>
+                  <option value="admin_action">Admin Actions</option>
+                </select>
+              </div>
+              <button id="refresh-logs" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Refresh
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table id="logs-table" class="display" style="width:100%">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Type</th>
+                  <th>User</th>
+                  <th>Details</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data will be loaded via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Initialize DataTable
+      const logsTable = $('#logs-table').DataTable({
+        ajax: {
+          url: '/api/admin/activity-logs',
+          dataSrc: 'logs',
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+          }
+        },
+        columns: [
+          { data: 'id' },
+          { 
+            data: 'type',
+            render: function(data, type, row) {
+              const typeMap = {
+                'signup': '<span class="badge badge-primary">Signup</span>',
+                'login': '<span class="badge badge-info">Login</span>',
+                'event_created': '<span class="badge badge-success">Event Created</span>',
+                'event_joined': '<span class="badge badge-success">Event Joined</span>',
+                'community_created': '<span class="badge badge-success">Community Created</span>',
+                'community_joined': '<span class="badge badge-success">Community Joined</span>',
+                'message_sent': '<span class="badge badge-secondary">Message Sent</span>',
+                'points_updated': '<span class="badge badge-warning">Points Updated</span>',
+                'admin_action': '<span class="badge badge-danger">Admin Action</span>'
+              };
+              return typeMap[data] || data;
+            }
+          },
+          { 
+            data: 'user_name',
+            render: function(data, type, row) {
+              return data || 'System';
+            }
+          },
+          { data: 'details' },
+          { 
+            data: 'created_at',
+            render: function(data) {
+              return new Date(data).toLocaleString();
+            }
+          }
+        ],
+        order: [[4, 'desc']],
+        responsive: true
+      });
+
+      // Filter by log type
+      $('#log-type').on('change', function() {
+        const type = $(this).val();
+        logsTable.column(1).search(type).draw();
+      });
+
+      // Refresh logs
+      $('#refresh-logs').on('click', function() {
+        logsTable.ajax.reload();
+      });
+
+      // Check admin authentication
+      checkAdminAuth();
+    });
+
+    function checkAdminAuth() {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        window.location.href = '/admin/login.html';
+      }
+    }
+  </script>
+</body>
+</html>

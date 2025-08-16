@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB - Admin Communities</title>
+  <link rel="stylesheet" href="../client/assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB</h1>
+        <p>Admin Panel</p>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li class="active"><a href="communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li><a href="logs.html"><i class="fas fa-clipboard-list"></i> Activity Logs</a></li>
+        <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="main-header">
+        <div class="header-left">
+          <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2>Community Management</h2>
+        </div>
+        <div class="header-right">
+          <div class="user-profile">
+            <img id="admin-avatar" src="../client/assets/images/default-avatar.jpg" alt="Admin Avatar">
+            <span>Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <div class="admin-toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="community-search" placeholder="Search communities...">
+          </div>
+          <div class="filter-options">
+            <select id="sort-by">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="members">Most Members</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Community</th>
+                <th>Creator</th>
+                <th>Description</th>
+                <th>Members</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="communities-table-body">
+              <tr>
+                <td colspan="6" class="loading-row">
+                  <i class="fas fa-spinner fa-spin"></i>
+                  <span>Loading communities...</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="btn btn-outline" id="prev-page" disabled>Previous</button>
+          <span id="page-info">Page 1 of 1</span>
+          <button class="btn btn-outline" id="next-page" disabled>Next</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Community Detail Modal -->
+  <div class="modal" id="community-detail-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Community Details</h3>
+        <button class="btn btn-icon close-modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="community-detail-content">
+        <!-- Community details will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline close-modal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check admin authentication
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Load communities
+      loadCommunities();
+      
+      // Setup event listeners
+      setupCommunitiesListeners();
+
+      // Logout button
+      document.getElementById('logout-btn').addEventListener('click', function() {
+        localStorage.removeItem('adminToken');
+        window.location.href = 'login.html';
+      });
+    });
+
+    let currentPage = 1;
+    let totalPages = 1;
+
+    function loadCommunities(page = 1, search = '', sort = 'newest') {
+      const token = localStorage.getItem('adminToken');
+      const tableBody = document.getElementById('communities-table-body');
+      
+      // Show loading state
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="loading-row">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading communities...</span>
+          </td>
+        </tr>
+      `;
+      
+      // Build query string
+      const query = new URLSearchParams({
+        page,
+        search,
+        sort
+      }).toString();
+      
+      fetch(`/api/admin/communities?${query}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to load communities');
+        }
+        return response.json();
+      })
+      .then(data => {
+        currentPage = data.page;
+        totalPages = data.totalPages;
+        
+        // Update pagination
+        updatePagination();
+        
+        // Render communities
+        if (data.communities.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6">No communities found</td>
+            </tr>
+          `;
+          return;
+        }
+        
+        tableBody.innerHTML = data.communities.map(community => `
+          <tr>
+            <td>
+              <div class="community-cell">
+                <img src="${community.image_url || '../client/assets/images/community-default.jpg'}" 
+                     alt="${community.name}" class="community-avatar">
+                <div>
+                  <div class="community-title">${community.name}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="user-cell">
+                <img src="${community.creator_avatar || '../client/assets/images/default-avatar.jpg'}" 
+                     alt="${community.creator_name}" class="user-avatar">
+                <span>${community.creator_name}</span>
+              </div>
+            </td>
+            <td>${community.description || 'No description'}</td>
+            <td>${community.members_count}</td>
+            <td>${formatDate(community.created_at)}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-sm btn-primary view-community" data-community-id="${community.id}">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline edit-community" data-community-id="${community.id}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger delete-community" data-community-id="${community.id}">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+        
+        // Add event listeners to action buttons
+        document.querySelectorAll('.view-community').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const communityId = this.getAttribute('data-community-id');
+            viewCommunityDetails(communityId);
+          });
+        });
+        
+        document.querySelectorAll('.edit-community').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const communityId = this.getAttribute('data-community-id');
+            editCommunity(communityId);
+          });
+        });
+        
+        document.querySelectorAll('.delete-community').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const communityId = this.getAttribute('data-community-id');
+            deleteCommunity(communityId);
+          });
+        });
+      })
+      .catch(error => {
+        console.error('Error loading communities:', error);
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="error-state">
+              <i class="fas fa-exclamation-triangle"></i>
+              <p>Failed to load communities</p>
+              <button class="btn btn-primary" onclick="loadCommunities()">Try Again</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function updatePagination() {
+      document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById('prev-page').disabled = currentPage === 1;
+      document.getElementById('next-page').disabled = currentPage === totalPages;
+    }
+
+    function viewCommunityDetails(communityId) {
+      const token = localStorage.getItem('adminToken');
+      const modal = document.getElementById('community-detail-modal');
+      const modalContent = document.getElementById('community-detail-content');
+      
+      // Show loading state
+      modalContent.innerHTML = `
+        <div class="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>Loading community details...</span>
+        </div>
+      `;
+      
+      // Show modal
+      modal.classList.add('active');
+      
+      // Load community details
+      fetch(`/api/admin/communities/${communityId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to load community details');
+        }
+        return response.json();
+      })
+      .then(community => {
+        // Render community details
+        modalContent.innerHTML = `
+          <div class="community-detail-header">
+            <div class="community-detail-image">
+              <img src="${community.image_url || '../client/assets/images/community-default.jpg'}" 
+                   alt="${community.name}" style="max-width: 100%; border-radius: 8px;">
+            </div>
+            <h3>${community.name}</h3>
+            <div class="community-detail-meta">
+              <div><i class="fas fa-users"></i> ${community.members_count} members</div>
+              <div><i class="fas fa-calendar-alt"></i> Created ${formatDate(community.created_at)}</div>
+            </div>
+          </div>
+          
+          <div class="community-detail-description">
+            <h4>Description</h4>
+            <p>${community.description || 'No description provided'}</p>
+          </div>
+          
+          <div class="community-detail-creator">
+            <h4>Created By</h4>
+            <div class="user-cell">
+              <img src="${community.creator_avatar || '../client/assets/images/default-avatar.jpg'}" 
+                   alt="${community.creator_name}" class="user-avatar">
+              <div>
+                <div>${community.creator_name}</div>
+                <div class="text-muted">${community.creator_email}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="community-detail-members">
+            <h4>Members (${community.members.length})</h4>
+            <div class="members-grid">
+              ${community.members.map(member => `
+                <div class="member-card">
+                  <img src="${member.profile_pic || '../client/assets/images/default-avatar.jpg'}" 
+                       alt="${member.name}" class="member-avatar">
+                  <div class="member-name">${member.name}</div>
+                  <div class="member-joined">Joined ${formatDate(member.joined_at)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <div class="community-actions">
+            <button class="btn btn-outline close-modal">Close</button>
+            <button class="btn btn-primary edit-community" data-community-id="${community.id}">
+              <i class="fas fa-edit"></i> Edit Community
+            </button>
+          </div>
+        `;
+        
+        // Add event listener to edit button
+        modalContent.querySelector('.edit-community').addEventListener('click', function() {
+          modal.classList.remove('active');
+          editCommunity(communityId);
+        });
+      })
+      .catch(error => {
+        console.error('Error loading community details:', error);
+        modalContent.innerHTML = `
+          <div class="error-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load community details</p>
+            <button class="btn btn-primary" onclick="viewCommunityDetails('${communityId}')">Try Again</button>
+          </div>
+        `;
+      });
+      
+      // Close modal handlers
+      document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+          modal.classList.remove('active');
+        });
+      });
+    }
+
+    function editCommunity(communityId) {
+      // In a real app, you would show an edit form
+      alert(`Edit community ${communityId} functionality would be implemented here`);
+    }
+
+    function deleteCommunity(communityId) {
+      if (!confirm('Are you sure you want to delete this community?')) return;
+      
+      const token = localStorage.getItem('adminToken');
+      
+      fetch(`/api/admin/communities/${communityId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to delete community');
+        }
+        return response.json();
+      })
+      .then(() => {
+        showToast('Community deleted successfully', 'success');
+        loadCommunities(currentPage);
+      })
+      .catch(error => {
+        console.error('Error deleting community:', error);
+        showToast(error.message || 'Failed to delete community', 'error');
+      });
+    }
+
+    function setupCommunitiesListeners() {
+      // Search input
+      const searchInput = document.getElementById('community-search');
+      searchInput.addEventListener('input', debounce(function() {
+        loadCommunities(1, this.value, document.getElementById('sort-by').value);
+      }, 300));
+      
+      // Sort dropdown
+      document.getElementById('sort-by').addEventListener('change', function() {
+        loadCommunities(1, searchInput.value, this.value);
+      });
+      
+      // Pagination buttons
+      document.getElementById('prev-page').addEventListener('click', function() {
+        if (currentPage > 1) {
+          loadCommunities(currentPage - 1, searchInput.value, 
+                        document.getElementById('sort-by').value);
+        }
+      });
+      
+      document.getElementById('next-page').addEventListener('click', function() {
+        if (currentPage < totalPages) {
+          loadCommunities(currentPage + 1, searchInput.value, 
+                        document.getElementById('sort-by').value);
+        }
+      });
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+
+    function debounce(func, wait) {
+      let timeout;
+      return function() {
+        const context = this, args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
+
+    function showToast(message, type = 'info') {
+      // Create toast element
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      
+      // Add to body
+      document.body.appendChild(toast);
+      
+      // Remove after delay
+      setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

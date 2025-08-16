@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TribesHUB Admin - Analytics</title>
+  <link rel="stylesheet" href="../admin/assets/css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+</head>
+<body>
+  <div class="admin-container">
+    <!-- Sidebar Navigation -->
+    <nav class="admin-sidebar">
+      <div class="sidebar-header">
+        <h1>TribesHUB <span>Admin</span></h1>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
+        <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        <li><a href="communities.html"><i class="fas fa-users"></i> Communities</a></li>
+        <li><a href="logs.html"><i class="fas fa-clipboard-list"></i> Activity Logs</a></li>
+        <li class="active"><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <header class="admin-header">
+        <div class="header-left">
+          <!-- <button class="menu-toggle">
+            <i class="fas fa-bars"></i>
+          </button> -->
+          <h2>Analytics Dashboard</h2>
+        </div>
+        <div class="header-right">
+          <div class="time-range">
+            <select id="time-range" class="form-control">
+              <option value="7">Last 7 Days</option>
+              <option value="30" selected>Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+              <option value="365">Last Year</option>
+            </select>
+          </div>
+          <div class="admin-profile">
+            <img src="../assets/images/admin-avatar.jpg" alt="Admin Avatar">
+            <span>Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="admin-main-content">
+        <!-- Summary Cards -->
+        <div class="row">
+          <div class="col-md-3">
+            <div class="summary-card bg-primary">
+              <div class="card-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="card-info">
+                <h3 id="total-users">0</h3>
+                <p>Total Users</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="summary-card bg-success">
+              <div class="card-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="card-info">
+                <h3 id="new-users">0</h3>
+                <p>New Users</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="summary-card bg-info">
+              <div class="card-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="card-info">
+                <h3 id="total-events">0</h3>
+                <p>Total Events</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="summary-card bg-warning">
+              <div class="card-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="card-info">
+                <h3 id="total-communities">0</h3>
+                <p>Total Communities</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="chart-card">
+              <div class="card-header">
+                <h3>User Signups</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="signups-chart"></canvas>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart-card">
+              <div class="card-header">
+                <h3>Activity Types</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="activity-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="chart-card">
+              <div class="card-header">
+                <h3>Points Distribution</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="points-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Check admin authentication
+      checkAdminAuth();
+
+      // Load analytics data
+      loadAnalyticsData(30);
+
+      // Time range change
+      $('#time-range').on('change', function() {
+        const days = $(this).val();
+        loadAnalyticsData(days);
+      });
+    });
+
+    let signupsChart, activityChart, pointsChart;
+
+    function loadAnalyticsData(days) {
+      $.ajax({
+        url: '/api/admin/analytics?days=' + days,
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+        },
+        success: function(data) {
+          // Update summary cards
+          $('#total-users').text(data.totalUsers);
+          $('#new-users').text(data.newSignups);
+          $('#total-events').text(data.totalEvents);
+          $('#total-communities').text(data.totalCommunities);
+
+          // Update charts
+          updateSignupsChart(data.signupsData);
+          updateActivityChart(data.activityTypes);
+          updatePointsChart(data.pointsDistribution);
+        },
+        error: function(xhr, status, error) {
+          console.error('Error loading analytics:', error);
+        }
+      });
+    }
+
+    function updateSignupsChart(data) {
+      const ctx = document.getElementById('signups-chart').getContext('2d');
+      const labels = data.map(item => item.date);
+      const counts = data.map(item => item.count);
+
+      if (signupsChart) {
+        signupsChart.destroy();
+      }
+
+      signupsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'User Signups',
+            data: counts,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            tension: 0.1,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function updateActivityChart(data) {
+      const ctx = document.getElementById('activity-chart').getContext('2d');
+      const labels = data.map(item => item.type);
+      const counts = data.map(item => item.count);
+
+      if (activityChart) {
+        activityChart.destroy();
+      }
+
+      activityChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: counts,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 206, 86, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
+              'rgba(255, 159, 64, 0.7)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'right',
+            }
+          }
+        }
+      });
+    }
+
+    function updatePointsChart(data) {
+      const ctx = document.getElementById('points-chart').getContext('2d');
+      const labels = ['0-60 (Peace)', '61-180 (Heart)', '181+ (Smile)'];
+      const counts = [
+        data.peaceLevel,
+        data.heartLevel,
+        data.smileLevel
+      ];
+
+      if (pointsChart) {
+        pointsChart.destroy();
+      }
+
+      pointsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Users by Points Level',
+            data: counts,
+            backgroundColor: [
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(54, 162, 235, 0.7)'
+            ],
+            borderColor: [
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function checkAdminAuth() {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        window.location.href = '/admin/login.html';
+      }
+    }
+  </script>
+</body>
+</html>
